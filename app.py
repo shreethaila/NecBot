@@ -5,8 +5,16 @@ import mysql.connector
 from langdetect import detect
 import os
 import speech_recognition as sr
+ffmpeg_path = 'C:\\ffmpeg\\bin'
+import os
+os.environ["PATH"] += os.pathsep + ffmpeg_path
 from pydub import AudioSegment
+from pydub.utils import mediainfo
+from speech_recognition import AudioFile, Recognizer, UnknownValueError, RequestError
+import tempfile
 import io
+AudioSegment.converter = ffmpeg_path
+
 app = Flask(__name__)
 recaptcha = ReCaptcha(app=app)
 app.secret_key=os.urandom(24)
@@ -24,8 +32,6 @@ recaptcha.init_app(app)
 
 app.config['SECRET_KEY'] = 'cairocoders-ednalan'
 
-#database connectivity
-# conn=mysql.connector.connect(host='localhost',port='3306',user='root',password='thaila',database='register')
 import pymysql
 
 conn = pymysql.connect(
@@ -64,9 +70,6 @@ def login():
 def about():
     return render_template('register.html')
 
-@app.route('/forgot')
-def forgot():
-    return render_template('forgot.html')
 
 @app.route('/login_validation',methods=['POST'])
 def login_validation():
@@ -82,32 +85,18 @@ def login_validation():
     else:
         flash('Invalid credentials !!!')
         return redirect('/')
-    # return "The Email is {} and the Password is {}".format(email,password)
-    # return render_template('register.html')
 
 @app.route('/add_user',methods=['POST'])
 def add_user():
     name=request.form.get('name') 
     email=request.form.get('uemail')
     password=request.form.get('upassword')
-
-    #cur.execute("UPDATE users SET password='{}'WHERE name = '{}'".format(password, name))
     cur.execute("""INSERT INTO  users(name,email,password) VALUES('{}','{}','{}')""".format(name,email,password))
     conn.commit()
     cur.execute("""SELECT * FROM `users` WHERE `email` LIKE '{}'""".format(email))
     myuser=cur.fetchall()
     flash('You have successfully registered!')
     session['id']=myuser[0][0]
-    return redirect('/index')
-
-@app.route('/suggestion',methods=['POST'])
-def suggestion():
-    email=request.form.get('uemail')
-    suggesMess=request.form.get('message')
-
-    cur.execute("""INSERT INTO  suggestion(email,message) VALUES('{}','{}')""".format(email,suggesMess))
-    conn.commit()
-    flash('You suggestion is succesfully sent!')
     return redirect('/index')
 
 @app.route('/add_user',methods=['POST'])
@@ -125,25 +114,15 @@ def logout():
     session.pop('id')
     return redirect('/')
 
-   
 
 @app.route("/get", methods=['GET', 'POST'])
 def get_bot_response():
-    if request.method == 'POST':
-        # Handle the POST request with audio data
-        audio_data = request.files['audio'].read()
-        if audio_data:
-            recognizer = sr.Recognizer()
+    print(request.args)
+    print(request.args.get("msg"))
 
-        # Recognize the speech
-            with sr.AudioFile(io.BytesIO(audio_data)) as source:
-                audio_text = recognizer.recognize_google(source)
-
-        # Pass the recognized text to your chatbot for a response
-            chatbot_response = english_bot.get_response(audio_text)
-            return str(chatbot_response)
-    userText = request.args.get('msg')  
+    userText = request.args.get('msg')
     user_language = get_user_language(userText)
+    
     if user_language == 'en':
         return str(english_bot.get_response(userText))
     elif user_language == 'ta':
@@ -153,5 +132,4 @@ def get_bot_response():
 
 
 if __name__ == "__main__":
-    # app.secret_key=""
-    app.run() 
+    app.run()

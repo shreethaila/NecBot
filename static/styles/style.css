@@ -1,12 +1,14 @@
+
 :root {
-  /*--body-bg: linear-gradient(135deg, #f5f7fa 0%, rgb(221, 237, 250) 100%);*/
+  --body-bg: #f4f0ff; /* Background color (Light Purple) */
   --body-bg: aliceblue;
   --msger-bg: #fff;
-  --border: 2px solid #ddd;
-  --left-msg-bg: linear-gradient(to right, #7207dd, #7207dd);
-  --right-msg-bg: linear-gradient(to right, #cc2b5e, #cc2b5e);
-  /*--right-msg-bg: #579ffb;*/
+  --left-msg-bg: #a86be6; /* Left message bubble background color (Purple) */
+  --right-msg-bg: #ff6b81; /* Right message bubble background color (Pink) */
 }
+
+/* ... (rest of your CSS code) ... */
+
 
 html {
   box-sizing: border-box;
@@ -151,7 +153,7 @@ body {
 }
 
 .msger-voice-btn:hover {
-  color: #7207dd; 
+  color: rgba(0, 0, 255, 0.336);; 
   
   /* Change color on hover */
 }
@@ -168,14 +170,14 @@ body {
 }
 .msger-send-btn {
   margin-left: 10px; /* Remove margin-left for the send button */
-  background-image: linear-gradient(to right, #7207dd, #7207dd);
+  background-image: linear-gradient(to right, rgba(0, 0, 255, 0.336), rgba(0, 0, 255, 0.336));
   color: black;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.23s;
 }
 .msger-send-btn:hover {
-  background-image: linear-gradient(to right, #7207dd, #7207dd);
+  background-image: linear-gradient(to right, rgba(0, 0, 255, 0.336),rgba(0, 0, 255, 0.336));
   /* background: rgb(0, 180, 50);*/
 }
 
