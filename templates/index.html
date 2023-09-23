@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>NEC Bot</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image" sizes="16x16">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/ionicons.min.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Login-Form-Dark.css') }}">
+
+</head>
+
+<body>
+  <section class="msger">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#" style="color: white;">
+        &emsp;
+        <b> &nbsp; NEC BOT &emsp; </b></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+
+        </ul>
+      </div>
+    </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible" id="alert" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>{{ message }}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <main class="msger-chat" style="color: white;">
+      </br>
+      <div class="msg left-msg">
+        <div class="msg-img" style="background-image: url('static/images/nec.png')">
+        </div>
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name"><b>NEC BOT</b> </div>
+          </div>
+
+          <div class="msg-text" style="color: white;">
+            <b>Hi there, Welcome to NEC Bot 👋 If you need any assistance, I'm always here.
+          </div>
+        </div>
+      </div>
+      <div class="msg left-msg">
+        <div class="msg-img" style="background-image: url('static/images/nec.png')">
+        </div>
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name"> <b>NEC BOT</b></div>
+          </div>
+
+          <div class="msg-text" style="color: white;">
+            Which of the following user groups do you belong to?
+
+            <br><br>1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's
+            Section Enquiry.</br>
+
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+    <form class="msger-inputarea">
+      <input type="text" class="msger-input" id="textInput" placeholder="Enter your enquiry...">
+
+      <button type="submit" class="msger-send-btn">Send</button>
+      <button type="button" class="msger-voice-btn">
+        <img src="../static/images/voice.jpg" alt="Voice Icon" id="voice-icon">
+      </button>
+    </form>
+  </section>
+  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+  <script>
+
+
+    const voiceBtn = document.querySelector('.msger-voice-btn');
+    const voiceIcon = document.getElementById("voice-icon")
+    const audioChunks = [];
+
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+
+      recognition.onresult = (event) => {
+        const transcription = event.results[0][0].transcript;
+        console.log('Transcription:', transcription);
+
+        
+        botResponse(transcription);
+      }
+
+      
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+      };
+
+      
+      voiceBtn.addEventListener('mousedown', () => {
+        console.log('Start recording');
+        voiceIcon.src = "../static/images/listening.jpg"
+        audioChunks.length = 0;
+        recognition.start();
+      });
+      voiceBtn.addEventListener('touchstart', () => {
+        console.log('Start recording');
+        voiceIcon.src = "../static/images/listening.jpg"
+        audioChunks.length = 0;
+        recognition.start();
+      });
+
+      voiceBtn.addEventListener('mouseup', () => {
+        console.log('Stop recording');
+        voiceIcon.src = "../static/images/voice.jpg"
+        recognition.stop();
+      });
+      voiceBtn.addEventListener('touchend', () => {
+        console.log('Stop recording');
+        voiceIcon.src = "../static/images/listening.jpg"
+        recognition.stop();
+      });
+    } else {
+      console.error('Web Speech API is not supported in this browser.');
+    }
+
+    let mediaRecorder;
+    function startRecording() {
+      console.log("Start audio recording");
+      const constraints = { audio: true };
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function (stream) {
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = function (event) {
+            if (event.data.size > 0) {
+              audioChunks.push(event.data);
+            }
+          };
+          mediaRecorder.start();
+          mediaRecorder.onstop = () => {
+            console.log("Stopped audio recording");
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+
+            const audio = new Audio(audioUrl);
+            audio.controls = true;
+
+            appendMessage(PERSON_NAME, PERSON_IMG, "right", audio);
+
+
+            audioChunks.length = 0;
+          };
+        })
+        .catch(function (error) {
+          console.error('Error accessing microphone:', error);
+        });
+    }
+
+    function stopRecording() {
+      console.log("Stop audio recording");
+      if (mediaRecorder) {
+        mediaRecorder.stop();
+      }
+    }
+
+    voiceBtn.addEventListener('mousedown', startRecording);
+    voiceBtn.addEventListener('touchstart', startRecording);
+
+    voiceBtn.addEventListener('mouseup', stopRecording);
+    voiceBtn.addEventListener('touchend', stopRecording);
+
+
+
+    const msgerForm = get(".msger-inputarea");
+    const msgerInput = get(".msger-input");
+    const msgerChat = get(".msger-chat");
+
+    const BOT_IMG = "static/images/nec.png";
+    const PERSON_IMG = "static/images/user.png";
+    const BOT_NAME = "NEC Bot";
+    const PERSON_NAME = "You";
+
+    msgerForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const msgText = msgerInput.value;
+      if (!msgText) return;
+
+      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+      msgerInput.value = "";
+      botResponse(msgText);
+    });
+
+    function appendMessage(name, img, side, content) {
+      const msgHTML = document.createElement('div');
+      msgHTML.classList.add('msg', `${side}-msg`);
+
+      const msgImg = document.createElement('div');
+      msgImg.classList.add('msg-img');
+      msgImg.style.backgroundImage = `url(${img})`;
+
+      const msgBubble = document.createElement('div');
+      msgBubble.classList.add('msg-bubble');
+
+      const msgInfo = document.createElement('div');
+      msgInfo.classList.add('msg-info');
+
+
+      const msgInfoName = document.createElement('div');
+      msgInfoName.classList.add('msg-info-name');
+      msgInfoName.textContent = name;
+
+      const msgInfoTime = document.createElement('div');
+      msgInfoTime.classList.add('msg-info-time');
+      msgInfoTime.textContent = formatDate(new Date());
+
+      const msgContent = document.createElement('div');
+      msgContent.classList.add('msg-content');
+
+      if (content instanceof HTMLAudioElement) {
+        msgContent.appendChild(content);
+      } else {
+        const msgText = document.createElement('div');
+        msgText.classList.add('msg-text');
+        msgText.innerHTML = content;
+        msgContent.appendChild(msgText);
+      }
+      msgInfo.appendChild(msgInfoName);
+      msgInfo.appendChild(msgInfoTime);
+      msgBubble.appendChild(msgInfo);
+      msgBubble.appendChild(msgContent);
+      msgHTML.appendChild(msgImg);
+      msgHTML.appendChild(msgBubble);
+
+      msgerChat.appendChild(msgHTML);
+      msgerChat.scrollTop += 500;
+    }
+
+
+    function botResponse(rawText) {
+
+      $.get("/get", { msg: rawText }).done(function (data) {
+        console.log(rawText);
+        console.log(data);
+        const msgText = data;
+        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+
+      });
+
+    }
+
+    function get(selector, root = document) {
+      return root.querySelector(selector);
+    }
+
+    function formatDate(date) {
+      const h = "0" + date.getHours();
+      const m = "0" + date.getMinutes();
+
+      return `${h.slice(-2)}:${m.slice(-2)}`;
+    }
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

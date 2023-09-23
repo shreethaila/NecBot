@@ -1,8 +1,7 @@
 from chatterbot import ChatBot
-from chatterbot.trainers import ListTrainer
+from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer
 import spacy
 spacy.load('en_core_web_sm')
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
 chatbot = ChatBot('<b>Nec Bot</b>')
 
@@ -13,7 +12,7 @@ english_bot = ChatBot(
         {
             'import_path': 'chatterbot.logic.BestMatch',
             'default_response': "Hi there, Welcome to NEC Bot! 👋 If you need any assistance, I'm always here.Go ahead and write the number of any query. 😃✨<b><br><br>  Which of the following user groups do you belong to? <br><br>1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br><br>",
-            'maximum_similarity_threshold': 0.90
+            'maximum_similarity_threshold': 0.6
         }
     ],
     database_uri='sqlite:///database.sqlite3'   
@@ -42,16 +41,16 @@ english_conversation = [
 
 
 "How are you?",
-"I'm good.</br> <br>Go ahead and write the number of any query. 😃✨ <br> 1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br>4.&emsp;Visitor's Section Enquiry.</br>",
+"I'm good.</br> <br>Go ahead and write the number of any query. 😃✨<b><br><br>  Which of the following user groups do you belong to? <br><br>1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br><br>",
 
 "Great",
-"Go ahead and write the number of any query. 😃✨ <br> 1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br>4.&emsp;Visitor's Section Enquiry.</br>",
+"Go ahead and write the number of any query. 😃✨<b><br><br>  Which of the following user groups do you belong to? <br><br>1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br><br>",
 
 "good",
-"Go ahead and write the number of any query. 😃✨ <br> 2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br>4.&emsp;Visitor's Section Enquiry.</br>",
+"Go ahead and write the number of any query. 😃✨<b><br><br>  Which of the following user groups do you belong to? <br><br>1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br><br>",
 
 "fine",
-"Go ahead and write the number of any query. 😃✨ <br> 2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br>4.&emsp;Visitor's Section Enquiry.</br>",
+"Go ahead and write the number of any query. 😃✨<b><br><br>  Which of the following user groups do you belong to? <br><br>1.&emsp;Student's Section Enquiry.</br>2.&emsp;Faculty Section Enquiry. </br>3.&emsp;Parent's Section Enquiry.</br><br>",
 
 "Thank You",
 "Your Welcome 😄",
@@ -394,3 +393,6 @@ tamil_conversation=[
 
 english_trainer.train(english_conversation)
 tamil_trainer.train(tamil_conversation)
+
+corpus_trainer = ChatterBotCorpusTrainer(english_bot)
+corpus_trainer.train("chatterbot.corpus.english")
