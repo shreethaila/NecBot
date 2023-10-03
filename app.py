@@ -122,12 +122,15 @@ def get_bot_response():
 
     userText = request.args.get('msg')
     user_language = get_user_language(userText)
+    print(english_bot)
     
     if user_language == 'en':
+        print("english")
         return str(english_bot.get_response(userText))
     elif user_language == 'ta':
         return str(tamil_bot.get_response(userText))
     else:
+        print("inga pore")
         return str(english_bot.get_response(userText))
 
 
